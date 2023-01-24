@@ -1,0 +1,14 @@
+{
+    "name": "dexpro-solutions-gmbh/softek-barcode-wrapper",
+    "description": "Wrapper arround the barcode SDK developed by Softek Software Ltd.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "DexproSolutionsGmbh\\SoftekBarcodeWrapper\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}
