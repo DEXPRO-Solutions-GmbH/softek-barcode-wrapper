@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DexproSolutionsGmbh\SoftekBarcodeWrapper;
 
+use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekUnsupportedException;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekInitializationException;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekProcessImageException;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Model\BarcodeScanResult;
@@ -140,6 +141,17 @@ class SoftekBarcodeAPI
                 throw new SoftekUnsupportedException(
                     sprintf("No integer type is supported for operating system %s", PHP_OS)
                 );
+        }
+    }
+
+
+    /**
+     * will destroy the instance of the barcode tool kit
+     */
+    public function __destruct()
+    {
+        if (isset($this->instance) && isset($this->ffi)) {
+            $this->ffi->mtDestroyBarcodeInstance($this->instance);
         }
     }
 
