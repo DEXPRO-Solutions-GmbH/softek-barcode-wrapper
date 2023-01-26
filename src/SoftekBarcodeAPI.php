@@ -83,11 +83,11 @@ class SoftekBarcodeAPI
             $barcodeScanResult = new BarcodeScanResult();
             // converting the cdate byte array type to a readable string
             $barcodeScanResult
-                ->setText($this->ffiByteArrayToString($this->ffi->mtGetBarString($this->instance, $barcodeIndex)))
-                ->setType($this->ffiByteArrayToString($this->ffi->mtGetBarStringType($this->instance, $barcodeIndex)));
+                ->setText(self::ffiByteArrayToString($this->ffi->mtGetBarString($this->instance, $barcodeIndex)))
+                ->setType(self::ffiByteArrayToString($this->ffi->mtGetBarStringType($this->instance, $barcodeIndex)));
 
             // switch type of variable to be confirmed with operating system
-            $ffiType = (PHP_OS === 'Linux') ? "long" : "int";
+            $ffiType = $this->getIntegerType();
 
             // declare cdata int / long types to pass by reference to position function
             $top = FFI::new($ffiType);
@@ -115,7 +115,7 @@ class SoftekBarcodeAPI
      * @param $byteArray
      * @return string
      */
-    private function ffiByteArrayToString($byteArray): string
+    private static function ffiByteArrayToString($byteArray): string
     {
         $charType = FFI::type('char*');
         $castedValue = FFI::cast($charType, $byteArray);
@@ -123,18 +123,23 @@ class SoftekBarcodeAPI
     }
 
     /**
-     * will destroy the instance of the barcode tool kit
+     * This function returns the datatype relating to the operating system.
+     * Notice this method only supports Windows and Linux OS.
+     *
+     * @return string
+     * @throws SoftekUnsupportedException if an unknown operating system is detected
      */
-    public function __destruct()
+    private function getIntegerType(): string
     {
-        /* DestroyBarcodeInstance destroys an instance
-         * of the barcode toolkit and releases any resources used by the toolkit.
-         * This function only exists in the dll interface to the SDK.
-         */
-        if (PHP_OS == 'Windows') {
-            if (isset($this->instance) && isset($this->ffi)) {
-                $this->ffi->mtDestroyBarcodeInstance($this->instance);
-            }
+        switch (PHP_OS) {
+            case 'Linux':
+                return 'long';
+            case 'Windows':
+                return "int";
+            default:
+                throw new SoftekUnsupportedException(
+                    sprintf("No integer type is supported for operating system %s", PHP_OS)
+                );
         }
     }
 
