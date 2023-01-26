@@ -8,6 +8,7 @@ use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekInitializationExcep
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekProcessImageException;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Model\BarcodeScanResult;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Model\SoftekBarcodeConfig;
+use DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits\SoftekPropertySetterTrait;
 use FFI;
 use Throwable;
 
@@ -56,8 +57,12 @@ class SoftekBarcodeAPI
      * @return BarcodeScanResult[]
      * @throws SoftekProcessImageException if an error occurs during extraction of the barcode from the InputFile
      */
-    public function processImage(string $pathToFile): array
+    public function processImage(string $pathToFile, bool $multipleRead = true): array
     {
+        // if user specifies that multiple read should disable, then we change the parameter
+        if (!$multipleRead) {
+            $this->setMultipleRead($multipleRead);
+        }
         $result = $this->ffi->mtScanBarCode($this->instance, $pathToFile);
         if ($result < 0) {
             throw new SoftekProcessImageException($result, $pathToFile);
@@ -76,13 +81,14 @@ class SoftekBarcodeAPI
      *
      * @param int $resultCount
      * @return BarcodeScanResult[]
+     * @throws SoftekUnsupportedException
      */
     private function extractScanResults(int $resultCount): array
     {
         $barcodeScanResults = [];
         for ($barcodeIndex = 1; $barcodeIndex <= $resultCount; $barcodeIndex++) {
             $barcodeScanResult = new BarcodeScanResult();
-            // converting the cdate byte array type to a readable string
+            // converting the cdata byte array type to a readable string
             $barcodeScanResult
                 ->setText(self::ffiByteArrayToString($this->ffi->mtGetBarString($this->instance, $barcodeIndex)))
                 ->setType(self::ffiByteArrayToString($this->ffi->mtGetBarStringType($this->instance, $barcodeIndex)));
@@ -142,6 +148,18 @@ class SoftekBarcodeAPI
                     sprintf("No integer type is supported for operating system %s", PHP_OS)
                 );
         }
+    }
+    /**
+     * If you set this property to false the barcode extraction will stop by the first barcode that is detected
+     * by the method {@link SoftekBarcodeAPI::processImage()}. So be carefull using this property. Properties default is
+     * true, that means extract all barcodes on the given document
+     *
+     * @param bool $bool
+     * @return void
+     */
+    public function setMultipleRead(bool $bool = true)
+    {
+        $this->ffi->mtSetMultipleRead($this->instance, $bool);
     }
 
 
