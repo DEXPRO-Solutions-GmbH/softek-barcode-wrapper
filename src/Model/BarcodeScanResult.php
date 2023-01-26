@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace DexproSolutionsGmbh\SoftekBarcodeWrapper\Model;
 
-
+/**
+ * This class is to be used to represent the extracted barcode results from the barcode toolkit library.
+ * Properties can only be set by passing them to the constructor, so custom classes should create by your own.
+ */
 class BarcodeScanResult
 {
     /**
@@ -48,22 +51,31 @@ class BarcodeScanResult
      */
     private int $right;
 
+
+    /**
+     * @param string $text
+     * @param string $type
+     * @param int $top
+     * @param int $bottom
+     * @param int $left
+     * @param int $right
+     */
+    public function __construct(string $text, string $type, int $top, int $bottom, int $left, int $right)
+    {
+        $this->text = $text;
+        $this->type = $type;
+        $this->top = $top;
+        $this->bottom = $bottom;
+        $this->left = $left;
+        $this->right = $right;
+    }
+
     /**
      * @return string
      */
     public function getText(): string
     {
         return $this->text;
-    }
-
-    /**
-     * @param string $text
-     * @return BarcodeScanResult
-     */
-    public function setText(string $text): BarcodeScanResult
-    {
-        $this->text = $text;
-        return $this;
     }
 
     /**
@@ -75,31 +87,11 @@ class BarcodeScanResult
     }
 
     /**
-     * @param string $type
-     * @return BarcodeScanResult
-     */
-    public function setType(string $type): BarcodeScanResult
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getTop(): int
     {
         return $this->top;
-    }
-
-    /**
-     * @param int $top
-     * @return BarcodeScanResult
-     */
-    public function setTop(int $top): BarcodeScanResult
-    {
-        $this->top = $top;
-        return $this;
     }
 
     /**
@@ -111,16 +103,6 @@ class BarcodeScanResult
     }
 
     /**
-     * @param int $left
-     * @return BarcodeScanResult
-     */
-    public function setLeft(int $left): BarcodeScanResult
-    {
-        $this->left = $left;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getBottom(): int
@@ -129,30 +111,10 @@ class BarcodeScanResult
     }
 
     /**
-     * @param int $bottom
-     * @return BarcodeScanResult
-     */
-    public function setBottom(int $bottom): BarcodeScanResult
-    {
-        $this->bottom = $bottom;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getRight(): int
     {
         return $this->right;
-    }
-
-    /**
-     * @param int $right
-     * @return BarcodeScanResult
-     */
-    public function setRight(int $right): BarcodeScanResult
-    {
-        $this->right = $right;
-        return $this;
     }
 }

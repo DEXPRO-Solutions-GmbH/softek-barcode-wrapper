@@ -87,11 +87,9 @@ class SoftekBarcodeAPI
     {
         $barcodeScanResults = [];
         for ($barcodeIndex = 1; $barcodeIndex <= $resultCount; $barcodeIndex++) {
-            $barcodeScanResult = new BarcodeScanResult();
             // converting the cdata byte array type to a readable string
-            $barcodeScanResult
-                ->setText(self::ffiByteArrayToString($this->ffi->mtGetBarString($this->instance, $barcodeIndex)))
-                ->setType(self::ffiByteArrayToString($this->ffi->mtGetBarStringType($this->instance, $barcodeIndex)));
+            $text = self::ffiByteArrayToString($this->ffi->mtGetBarString($this->instance, $barcodeIndex));
+            $type = self::ffiByteArrayToString($this->ffi->mtGetBarStringType($this->instance, $barcodeIndex));
 
             // switch type of variable to be confirmed with operating system
             $ffiType = $this->getIntegerType();
@@ -105,10 +103,14 @@ class SoftekBarcodeAPI
             $this->ffi->mtGetBarStringPos($this->instance, $barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
 
             // set referenced types
-            $barcodeScanResult->setTop($top->cdata);
-            $barcodeScanResult->setLeft($left->cdata);
-            $barcodeScanResult->setBottom($bottom->cdata);
-            $barcodeScanResult->setRight($right->cdata);
+            $barcodeScanResult = new BarcodeScanResult(
+                $text,
+                $type,
+                $top->cdata,
+                $bottom->cdata,
+                $left->cdata,
+                $right->cdata
+            );
 
             $barcodeScanResults[] = $barcodeScanResult;
         }
