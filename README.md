@@ -16,3 +16,7 @@ As of now, expect breaking changes and an unstable API. We may tag a 1.0.0 versi
 
 This project has a [Dev Container](https://containers.dev/) configuration, which should allow you to open this project in a standardized
 development container. See this for details: https://code.visualstudio.com/docs/devcontainers/containers
+
+## Requirements
+
+- `ext-ffi` - This package requires FFI. It is listed as suggested dependency, because to prevent failing dependency resolving e.g. in composer projects that provide backwards compatibility
