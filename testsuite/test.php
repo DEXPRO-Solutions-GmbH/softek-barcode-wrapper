@@ -20,6 +20,28 @@ $config->setSourceFilePath(__DIR__ . '/lib/libbardecode.so');
 try {
     $api = new SoftekBarcodeAPI($config);
 
+    // use this setter to define which barcode types should be read
+    $api->setReadCodabar(false);
+    $api->setReadCode25(false);
+    $api->setReadCode25ni(false);
+    $api->setReadCode39(false);
+    $api->setReadCode93(false);
+    $api->setReadCode128(false);
+    $api->setReadDatabar(false);
+    $api->setReadDataMatrix(true);
+    $api->setReadEAN8(false);
+    $api->setReadEAN13(false);
+    $api->setReadEAN13Supplemental(false);
+    $api->setReadMicroPDF417(false);
+    $api->setReadNumeric(false);
+    $api->setReadPatchCodes(false);
+    $api->setReadPDF417(false);
+    $api->setReadQRCode(false);
+    $api->setReadShortCode128(false);
+    $api->setReadUPCA(false);
+    $api->setReadUPCE(false);
+
+
     foreach (glob_recursive($pathToImages,$pattern) as $fileName) {
         foreach ($api->processImage($fileName) as $barcodeScanResult) {
             echo $barcodeScanResult->getText() . " \t " . $barcodeScanResult->getType(). PHP_EOL;
