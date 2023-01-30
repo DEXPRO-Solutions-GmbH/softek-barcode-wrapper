@@ -8,12 +8,17 @@ use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekInitializationExcep
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekProcessImageException;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Model\BarcodeScanResult;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Model\SoftekBarcodeConfig;
+use DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits\SoftekGetterTrait;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits\SoftekPropertySetterTrait;
+use DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits\SoftekSetterTrait;
 use FFI;
 use Throwable;
 
 class SoftekBarcodeAPI
 {
+    use SoftekSetterTrait;
+    use SoftekGetterTrait;
+
     /**
      * The foreign C API
      *
@@ -41,7 +46,7 @@ class SoftekBarcodeAPI
             $this->instance = $this->ffi->mtCreateBarcodeInstance();
 
             // license the instance for further operations
-            $this->ffi->mtSetLicenseKey($this->instance, $configuration->getLicenseKey());
+            $this->setLicenseKey($configuration->getLicenseKey());
         } catch (Throwable $e) {
             throw new SoftekInitializationException($e->getMessage(), 0, $e);
         }
@@ -56,6 +61,7 @@ class SoftekBarcodeAPI
      * @param string $pathToFile
      * @return BarcodeScanResult[]
      * @throws SoftekProcessImageException if an error occurs during extraction of the barcode from the InputFile
+     * @throws SoftekUnsupportedException
      */
     public function processImage(string $pathToFile, bool $multipleRead = true): array
     {
@@ -88,8 +94,8 @@ class SoftekBarcodeAPI
         $barcodeScanResults = [];
         for ($barcodeIndex = 1; $barcodeIndex <= $resultCount; $barcodeIndex++) {
             // converting the cdata byte array type to a readable string
-            $text = self::ffiByteArrayToString($this->ffi->mtGetBarString($this->instance, $barcodeIndex));
-            $type = self::ffiByteArrayToString($this->ffi->mtGetBarStringType($this->instance, $barcodeIndex));
+            $text = self::ffiByteArrayToString($this->getBarcodeString($barcodeIndex));
+            $type = self::ffiByteArrayToString($this->getBarcodeType($barcodeIndex));
 
             // switch type of variable to be confirmed with operating system
             $ffiType = $this->getIntegerType();
@@ -100,9 +106,8 @@ class SoftekBarcodeAPI
             $bottom = FFI::new($ffiType);
             $right = FFI::new($ffiType);
 
-            $this->ffi->mtGetBarStringPos($this->instance, $barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
+            $this->getBarcodePosition($barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
 
-            // set referenced types
             $barcodeScanResult = new BarcodeScanResult(
                 $text,
                 $type,
@@ -150,18 +155,6 @@ class SoftekBarcodeAPI
                     sprintf("No integer type is supported for operating system %s", PHP_OS)
                 );
         }
-    }
-    /**
-     * If you set this property to false the barcode extraction will stop by the first barcode that is detected
-     * by the method {@link SoftekBarcodeAPI::processImage()}. So be carefull using this property. Properties default is
-     * true, that means extract all barcodes on the given document
-     *
-     * @param bool $bool
-     * @return void
-     */
-    public function setMultipleRead(bool $bool = true)
-    {
-        $this->ffi->mtSetMultipleRead($this->instance, $bool);
     }
 
 

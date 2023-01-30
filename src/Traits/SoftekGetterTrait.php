@@ -6,10 +6,11 @@ namespace DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits;
 use FFI\CData;
 
 /**
- * This Trait can be implemented in each business logic class like transaction classes, service classes
- * or controller classes. Be sure that the global properties instance and ffi are declared and usable.
+ * This trait implements getter methods on the ffi object wrapped by this library.
+ * Be sure that the global properties instance and ffi are declared and usable.
  * Be sure that {@link SoftekSetterTrait::setLicenseKey()} is called before any getter is used.
  * Notice: Most times getter functions within the barcode tool kit requires a premature function call of mtScanBarCode
+ * @internal
  */
 trait SoftekGetterTrait
 {
