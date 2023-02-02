@@ -10,6 +10,11 @@ namespace DexproSolutionsGmbh\SoftekBarcodeWrapper\Model;
 class BarcodeScanResult
 {
     /**
+     * @var int
+     */
+    private int $page;
+
+    /**
      * The information that the barcode holds
      *
      * @var string
@@ -60,10 +65,11 @@ class BarcodeScanResult
      * @param int $left
      * @param int $right
      */
-    public function __construct(string $text, string $type, int $top, int $bottom, int $left, int $right)
+    public function __construct(string $text, string $type, int $page, int $top, int $bottom, int $left, int $right)
     {
         $this->text = $text;
         $this->type = $type;
+        $this->page = $page;
         $this->top = $top;
         $this->bottom = $bottom;
         $this->left = $left;

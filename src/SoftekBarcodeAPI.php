@@ -106,11 +106,12 @@ class SoftekBarcodeAPI
             $bottom = FFI::new($ffiType);
             $right = FFI::new($ffiType);
 
-            $this->getBarcodePosition($barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
+            $pageNo = $this->getBarcodePosition($barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
 
             $barcodeScanResult = new BarcodeScanResult(
                 $text,
                 $type,
+                $pageNo,
                 $top->cdata,
                 $bottom->cdata,
                 $left->cdata,

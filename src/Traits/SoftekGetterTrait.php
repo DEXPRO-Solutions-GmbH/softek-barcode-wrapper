@@ -47,9 +47,10 @@ trait SoftekGetterTrait
      * @param CData $top
      * @param CData $right
      * @param CData $bottom
-     * @return void
+     * @return int pageNo
      */
-    private function getBarcodePosition(int $barcodeIndex, CData $left, CData $top ,CData $right ,CData $bottom){
-        $this->ffi->mtGetBarStringPos($this->instance, $barcodeIndex, $left, $top, $right, $bottom);
+    private function getBarcodePosition(int $barcodeIndex, CData $left, CData $top, CData $right, CData $bottom): int
+    {
+        return $this->ffi->mtGetBarStringPos($this->instance, $barcodeIndex, $left, $top, $right, $bottom);
     }
 }
