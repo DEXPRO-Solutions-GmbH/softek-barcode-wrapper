@@ -13,5 +13,8 @@
   },
   "suggest": {
     "ext-ffi": "*"
+  },
+  "require-dev": {
+    "vimeo/psalm": "^5.6"
   }
 }
