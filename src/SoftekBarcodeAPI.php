@@ -43,6 +43,7 @@ class SoftekBarcodeAPI
             // init the c library with his declarations and source code
             $this->ffi = FFI::cdef(file_get_contents($configuration->getHeaderFilePath()), $configuration->getSourceFilePath());
             // create a persistent instance of the interface so that we can work with the same one during operations
+            /** @psalm-suppress UndefinedMethod */
             $this->instance = $this->ffi->mtCreateBarcodeInstance();
 
             // license the instance for further operations
@@ -69,6 +70,7 @@ class SoftekBarcodeAPI
         if (!$multipleRead) {
             $this->setMultipleRead($multipleRead);
         }
+        /** @psalm-suppress UndefinedMethod */
         $result = $this->ffi->mtScanBarCode($this->instance, $pathToFile);
         if ($result < 0) {
             throw new SoftekProcessImageException($result, $pathToFile);
@@ -106,8 +108,10 @@ class SoftekBarcodeAPI
             $bottom = FFI::new($ffiType);
             $right = FFI::new($ffiType);
 
+            /** @psalm-suppress PossiblyNullArgument */
             $pageNo = $this->getBarcodePosition($barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
 
+            /** @psalm-suppress UndefinedPropertyFetch */
             $barcodeScanResult = new BarcodeScanResult(
                 $text,
                 $type,
@@ -133,7 +137,9 @@ class SoftekBarcodeAPI
     private static function ffiByteArrayToString($byteArray): string
     {
         $charType = FFI::type('char*');
+        /** @psalm-suppress PossiblyNullArgument */
         $castedValue = FFI::cast($charType, $byteArray);
+        /** @psalm-suppress PossiblyNullArgument */
         return FFI::string($castedValue);
     }
 
@@ -164,7 +170,12 @@ class SoftekBarcodeAPI
      */
     public function __destruct()
     {
+        /**
+         * @psalm-suppress RedundantPropertyInitializationCheck
+         * @psalm-suppress RedundantCondition
+         */
         if (isset($this->instance) && isset($this->ffi)) {
+            /** @psalm-suppress UndefinedMethod */
             $this->ffi->mtDestroyBarcodeInstance($this->instance);
         }
     }
