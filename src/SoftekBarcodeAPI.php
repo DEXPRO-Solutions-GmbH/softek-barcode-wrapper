@@ -153,10 +153,12 @@ class SoftekBarcodeAPI
     private function getIntegerType(): string
     {
         switch (PHP_OS) {
-            case 'Linux':
-                return 'long';
-            case 'Windows':
-                return "int";
+            case "WIN32":
+            case "WINNT":
+            case "Windows":
+                return 'int';
+            case "Linux":
+                return "long";
             default:
                 throw new SoftekUnsupportedException(
                     sprintf("No integer type is supported for operating system %s", PHP_OS)
