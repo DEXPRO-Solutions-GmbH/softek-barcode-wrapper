@@ -9,7 +9,6 @@ use DexproSolutionsGmbh\SoftekBarcodeWrapper\Exception\SoftekProcessImageExcepti
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Model\BarcodeScanResult;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Model\SoftekBarcodeConfig;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits\SoftekGetterTrait;
-use DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits\SoftekPropertySetterTrait;
 use DexproSolutionsGmbh\SoftekBarcodeWrapper\Traits\SoftekSetterTrait;
 use FFI;
 use Throwable;
