@@ -40,10 +40,16 @@ class SoftekBarcodeAPI
     public function __construct(SoftekBarcodeConfig $configuration)
     {
         try {
+            $declarations = file_get_contents($configuration->getHeaderFilePath());
+            if ($declarations === false) {
+                throw new SoftekInitializationException(
+                    sprintf('Cannot read the header file "%s"', $configuration->getHeaderFilePath())
+                );
+            }
+
             // init the c library with his declarations and source code
-            $this->ffi = FFI::cdef(file_get_contents($configuration->getHeaderFilePath()), $configuration->getSourceFilePath());
+            $this->ffi = FFI::cdef($declarations, $configuration->getSourceFilePath());
             // create a persistent instance of the interface so that we can work with the same one during operations
-            /** @psalm-suppress UndefinedMethod */
             $this->instance = $this->ffi->mtCreateBarcodeInstance();
 
             // license the instance for further operations
@@ -70,7 +76,6 @@ class SoftekBarcodeAPI
         if (!$multipleRead) {
             $this->setMultipleRead($multipleRead);
         }
-        /** @psalm-suppress UndefinedMethod */
         $result = $this->ffi->mtScanBarCode($this->instance, $pathToFile);
         if ($result < 0) {
             throw new SoftekProcessImageException($result, $pathToFile);
@@ -108,7 +113,6 @@ class SoftekBarcodeAPI
             $bottom = $this->ffi->new($ffiType);
             $right = $this->ffi->new($ffiType);
 
-            /** @psalm-suppress PossiblyNullArgument */
             $pageNo = $this->getBarcodePosition($barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
 
             /** @psalm-suppress UndefinedPropertyFetch */
@@ -178,7 +182,6 @@ class SoftekBarcodeAPI
          * @psalm-suppress RedundantCondition
          */
         if (isset($this->instance) && isset($this->ffi)) {
-            /** @psalm-suppress UndefinedMethod */
             $this->ffi->mtDestroyBarcodeInstance($this->instance);
         }
     }

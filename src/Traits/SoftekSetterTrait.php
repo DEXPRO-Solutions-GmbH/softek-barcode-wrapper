@@ -24,7 +24,6 @@ trait SoftekSetterTrait
      */
     public function setMultipleRead(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetMultipleRead($this->instance, $active);
     }
     // endregion
@@ -39,7 +38,6 @@ trait SoftekSetterTrait
      */
     protected function setLicenseKey(string $key): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetLicenseKey($this->instance, $key);
     }
 
@@ -53,7 +51,6 @@ trait SoftekSetterTrait
      */
     public function setReadCodabar(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadCodabar($this->instance, $active);
     }
 
@@ -63,7 +60,6 @@ trait SoftekSetterTrait
      */
     public function setReadCode128(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadCode128($this->instance, $active);
     }
 
@@ -73,7 +69,6 @@ trait SoftekSetterTrait
      */
     public function setReadCode25(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadCode25($this->instance, $active);
     }
 
@@ -83,7 +78,6 @@ trait SoftekSetterTrait
      */
     public function setReadCode25ni(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadCode25ni($this->instance, $active);
     }
 
@@ -93,7 +87,6 @@ trait SoftekSetterTrait
      */
     public function setReadCode39(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadCode39($this->instance, $active);
     }
 
@@ -103,7 +96,6 @@ trait SoftekSetterTrait
      */
     public function setReadCode93(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadCode93($this->instance, $active);
     }
 
@@ -113,7 +105,6 @@ trait SoftekSetterTrait
      */
     public function setReadDataMatrix(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadDataMatrix($this->instance, $active);
     }
 
@@ -123,7 +114,6 @@ trait SoftekSetterTrait
      */
     public function setReadDatabar(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadDatabar($this->instance, $active);
     }
 
@@ -133,7 +123,6 @@ trait SoftekSetterTrait
      */
     public function setReadEAN13(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadEAN13($this->instance, $active);
     }
 
@@ -143,7 +132,6 @@ trait SoftekSetterTrait
      */
     public function setReadEAN13Supplemental(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadEAN13Supplemental($this->instance, $active);
     }
 
@@ -153,7 +141,6 @@ trait SoftekSetterTrait
      */
     public function setReadEAN8(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadEAN8($this->instance, $active);
     }
 
@@ -163,7 +150,6 @@ trait SoftekSetterTrait
      */
     public function setReadMicroPDF417(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadMicroPDF417($this->instance, $active);
     }
 
@@ -173,7 +159,6 @@ trait SoftekSetterTrait
      */
     public function setReadNumeric(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadNumeric($this->instance, $active);
     }
 
@@ -183,7 +168,6 @@ trait SoftekSetterTrait
      */
     public function setReadPDF417(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadPDF417($this->instance, $active);
     }
 
@@ -193,7 +177,6 @@ trait SoftekSetterTrait
      */
     public function setReadPatchCodes(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadPatchCodes($this->instance, $active);
     }
 
@@ -203,7 +186,6 @@ trait SoftekSetterTrait
      */
     public function setReadQRCode(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadQRCode($this->instance, $active);
     }
 
@@ -213,7 +195,6 @@ trait SoftekSetterTrait
      */
     public function setReadShortCode128(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadShortCode128($this->instance, $active);
     }
 
@@ -223,7 +204,6 @@ trait SoftekSetterTrait
      */
     public function setReadUPCA(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadUPCA($this->instance, $active);
     }
 
@@ -233,7 +213,6 @@ trait SoftekSetterTrait
      */
     public function setReadUPCE(bool $active): void
     {
-        /** @psalm-suppress UndefinedMethod */
         $this->ffi->mtSetReadUPCE($this->instance, $active);
     }
 
