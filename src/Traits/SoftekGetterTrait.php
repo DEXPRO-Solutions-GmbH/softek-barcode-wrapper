@@ -25,7 +25,6 @@ trait SoftekGetterTrait
      */
     private function getBarcodeString(int $barcodeIndex): CData
     {
-        /** @psalm-suppress UndefinedMethod */
         return $this->ffi->mtGetBarString($this->instance, $barcodeIndex);
     }
 
@@ -39,7 +38,6 @@ trait SoftekGetterTrait
      */
     private function getBarcodeType(int $barcodeIndex): CData
     {
-        /** @psalm-suppress UndefinedMethod */
         return $this->ffi->mtGetBarStringType($this->instance, $barcodeIndex);
     }
 
@@ -53,7 +51,6 @@ trait SoftekGetterTrait
      */
     private function getBarcodePosition(int $barcodeIndex, CData $left, CData $top, CData $right, CData $bottom): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return $this->ffi->mtGetBarStringPos($this->instance, $barcodeIndex, $left, $top, $right, $bottom);
     }
 }

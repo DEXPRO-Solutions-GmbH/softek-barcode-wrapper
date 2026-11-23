@@ -40,10 +40,16 @@ class SoftekBarcodeAPI
     public function __construct(SoftekBarcodeConfig $configuration)
     {
         try {
+            $declarations = file_get_contents($configuration->getHeaderFilePath());
+            if ($declarations === false) {
+                throw new SoftekInitializationException(
+                    sprintf('Cannot read the header file "%s"', $configuration->getHeaderFilePath())
+                );
+            }
+
             // init the c library with his declarations and source code
-            $this->ffi = FFI::cdef(file_get_contents($configuration->getHeaderFilePath()), $configuration->getSourceFilePath());
+            $this->ffi = FFI::cdef($declarations, $configuration->getSourceFilePath());
             // create a persistent instance of the interface so that we can work with the same one during operations
-            /** @psalm-suppress UndefinedMethod */
             $this->instance = $this->ffi->mtCreateBarcodeInstance();
 
             // license the instance for further operations
@@ -70,7 +76,6 @@ class SoftekBarcodeAPI
         if (!$multipleRead) {
             $this->setMultipleRead($multipleRead);
         }
-        /** @psalm-suppress UndefinedMethod */
         $result = $this->ffi->mtScanBarCode($this->instance, $pathToFile);
         if ($result < 0) {
             throw new SoftekProcessImageException($result, $pathToFile);
@@ -96,19 +101,18 @@ class SoftekBarcodeAPI
         $barcodeScanResults = [];
         for ($barcodeIndex = 1; $barcodeIndex <= $resultCount; $barcodeIndex++) {
             // converting the cdata byte array type to a readable string
-            $text = self::ffiByteArrayToString($this->getBarcodeString($barcodeIndex));
-            $type = self::ffiByteArrayToString($this->getBarcodeType($barcodeIndex));
+            $text = $this->ffiByteArrayToString($this->getBarcodeString($barcodeIndex));
+            $type = $this->ffiByteArrayToString($this->getBarcodeType($barcodeIndex));
 
             // switch type of variable to be confirmed with operating system
             $ffiType = $this->getIntegerType();
 
             // declare cdata int / long types to pass by reference to position function
-            $top = FFI::new($ffiType);
-            $left = FFI::new($ffiType);
-            $bottom = FFI::new($ffiType);
-            $right = FFI::new($ffiType);
+            $top = $this->ffi->new($ffiType);
+            $left = $this->ffi->new($ffiType);
+            $bottom = $this->ffi->new($ffiType);
+            $right = $this->ffi->new($ffiType);
 
-            /** @psalm-suppress PossiblyNullArgument */
             $pageNo = $this->getBarcodePosition($barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
 
             /** @psalm-suppress UndefinedPropertyFetch */
@@ -134,11 +138,12 @@ class SoftekBarcodeAPI
      * @param $byteArray
      * @return string
      */
-    private static function ffiByteArrayToString($byteArray): string
+    private function ffiByteArrayToString($byteArray): string
     {
-        $charType = FFI::type('char*');
+        // Since PHP 8.4, the methods new, cast and type of FFI are deprecated when called statically
+        $charType = $this->ffi->type('char*');
         /** @psalm-suppress PossiblyNullArgument */
-        $castedValue = FFI::cast($charType, $byteArray);
+        $castedValue = $this->ffi->cast($charType, $byteArray);
         /** @psalm-suppress PossiblyNullArgument */
         return FFI::string($castedValue);
     }
@@ -177,7 +182,6 @@ class SoftekBarcodeAPI
          * @psalm-suppress RedundantCondition
          */
         if (isset($this->instance) && isset($this->ffi)) {
-            /** @psalm-suppress UndefinedMethod */
             $this->ffi->mtDestroyBarcodeInstance($this->instance);
         }
     }
