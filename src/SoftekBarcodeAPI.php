@@ -96,17 +96,17 @@ class SoftekBarcodeAPI
         $barcodeScanResults = [];
         for ($barcodeIndex = 1; $barcodeIndex <= $resultCount; $barcodeIndex++) {
             // converting the cdata byte array type to a readable string
-            $text = self::ffiByteArrayToString($this->getBarcodeString($barcodeIndex));
-            $type = self::ffiByteArrayToString($this->getBarcodeType($barcodeIndex));
+            $text = $this->ffiByteArrayToString($this->getBarcodeString($barcodeIndex));
+            $type = $this->ffiByteArrayToString($this->getBarcodeType($barcodeIndex));
 
             // switch type of variable to be confirmed with operating system
             $ffiType = $this->getIntegerType();
 
             // declare cdata int / long types to pass by reference to position function
-            $top = FFI::new($ffiType);
-            $left = FFI::new($ffiType);
-            $bottom = FFI::new($ffiType);
-            $right = FFI::new($ffiType);
+            $top = $this->ffi->new($ffiType);
+            $left = $this->ffi->new($ffiType);
+            $bottom = $this->ffi->new($ffiType);
+            $right = $this->ffi->new($ffiType);
 
             /** @psalm-suppress PossiblyNullArgument */
             $pageNo = $this->getBarcodePosition($barcodeIndex, FFI::addr($left), FFI::addr($top), FFI::addr($right), FFI::addr($bottom));
@@ -134,11 +134,12 @@ class SoftekBarcodeAPI
      * @param $byteArray
      * @return string
      */
-    private static function ffiByteArrayToString($byteArray): string
+    private function ffiByteArrayToString($byteArray): string
     {
-        $charType = FFI::type('char*');
+        // Since PHP 8.4, the methods new, cast and type of FFI are deprecated when called statically
+        $charType = $this->ffi->type('char*');
         /** @psalm-suppress PossiblyNullArgument */
-        $castedValue = FFI::cast($charType, $byteArray);
+        $castedValue = $this->ffi->cast($charType, $byteArray);
         /** @psalm-suppress PossiblyNullArgument */
         return FFI::string($castedValue);
     }
